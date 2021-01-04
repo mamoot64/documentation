@@ -22,7 +22,7 @@ The [Metrics Summary page][1] displays a list of your metrics reported to Datado
 
 ## Metric details sidepanel
 
-Click on any metric name to display its details sidepanel for more detailed information regarding the metric’s metadata and tags: 
+Click on any metric name to display its details sidepanel for more information regarding the metric’s metadata and tags: 
 
 {{< img src="metrics/summary/metric_panel3.png" alt="Metric panel"  style="width:75%;">}}
 
@@ -34,13 +34,13 @@ The name of your metric in the [Metrics Explorer][2], [dashboards][3], etc.
 
 A metric name may emit multiple distinct metrics depending on its associated tag value combinations. This number varies with the timeframe chosen on the page.
 
-Learn more in the [counting custom metrics][4] documentation.
+Learn more in the [custom metrics][4] documentation.
 
 ### Hosts
 
-The total number of hosts reporting a metric .
+The total number of hosts reporting a metric.
 
-### Tag Values
+### Tag values
 
 The total number of unique tag values attached to a metric.
 
@@ -81,15 +81,15 @@ The tags table offers a variety of ways to explore all the tag keys and tag valu
 Use the tags table to:
 
 - Sort tag keys by the **Count column** (count of unique tag values).
-- Quickly search through the paginated table of tags for a particular tag key.
+- Search through the paginated table of tags for a particular tag key.
 - Export the tags table as a downloadable CSV.
 
 For any particular tag key, you can:
 
 - Inspect all tag values of that tag key.
-- Use a specific tag key:value to further filter the list of metrics displayed on the Metrics Summary page .
-- Open a graph of this metric filtered by your tag key:value pair in Metrics Explorer.
-- Copy any tag key:value for easier filtering across the application.
+- Use a specific tag `key:value` to further filter the list of metrics displayed on the Metrics Summary page.
+- Open a graph of this metric filtered by your tag `key:value` pair in the Metrics Explorer.
+- Copy any tag `key:value` for filtering across the application.
 
 {{< img src="metrics/summary/tags_table.gif" alt="Tags Table"  style="width:75%;">}}
 

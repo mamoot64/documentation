@@ -16,7 +16,7 @@ further_reading:
 
 ## Overview
 
-Regardless of whether you’re using Metrics Explorer, monitors, dashboards, or notebooks to query metrics data, you can filter the data to narrow the scope of the timeseries returned. Any metric can be filtered by tag(s) using the from dropdown to the right of the metric. 
+Regardless of whether you’re using the Metrics Explorer, monitors, dashboards, or notebooks to query metrics data, you can filter the data to narrow the scope of the timeseries returned. Any metric can be filtered by tag(s) using the from dropdown to the right of the metric. 
 
 {{< img src="metrics/advanced-filtering/tags.png" alt="Filter with tags"  style="width:80%;" >}}
 
