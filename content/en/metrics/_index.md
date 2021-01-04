@@ -11,6 +11,7 @@ aliases:
 {{< whatsnext desc="This section includes the following topics:">}}
     {{< nextlink href="/metrics/introduction" >}}<u>Metrics Introduction</u> - Learn about data, aggregation, and graphing metrics.{{< /nextlink >}}
     {{< nextlink href="/metrics/advanced-filtering" >}}<u>Advanced Filtering</u> - Filter your data to narrow the scope of metrics returned.{{< /nextlink >}}
+{{< /whatsnext >}}
 
 ### What are metrics?
 

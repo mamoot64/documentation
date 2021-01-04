@@ -58,9 +58,9 @@ When submitting custom metrics to Datadog, it is possible to change the [unit of
 
 #### Metric type
 
-The type for your metric (gauge, rate, or count). See the [metric type][8] page for more details.
+The type for your metric (gauge, rate, count, distribution). See the [metric type][8] page for more details.
 
-**Warning**: Editing the metric type changes that metric's behavior for **ALL** your analytics and monitors.
+**Warning**: Editing the metric type changes that metric's behavior for **ALL** your dashboards and monitors.
 
 #### Integration name
 

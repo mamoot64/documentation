@@ -43,7 +43,7 @@ avg:system.cpu.user{env:staging AND (availability-zone:us-east-1a OR availabilit
 {{< img src="metrics/advanced-filtering/ex1.png" alt="Example 1"  style="width:80%;" >}}
 
 ```
-avg:system.cpu.user{env:shop.ist AND availability-zone IN (us-east-1a, us-east-1c, us-east-1d)} by {availability-zone}
+avg:system.cpu.user{env:shop.ist AND availability-zone IN (us-east-1a, us-east-1b, us-east-4b)} by {availability-zone}
 ```
 
 {{< img src="metrics/advanced-filtering/ex2.gif" alt="Example 2"  style="width:80%;" >}}
