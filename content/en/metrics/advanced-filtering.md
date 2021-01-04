@@ -55,3 +55,7 @@ avg:system.cpu.user{env:shop.ist AND availability-zone IN (us-east-1a, us-east-1
 ```
 avg:system.cpu.user{app NOT IN (village)} by {app}
 ```
+
+## Further Reading
+
+{{< partial name="whats-next/whats-next.html" >}}
