@@ -204,7 +204,7 @@ class Integrations:
         return integration_content_with_link_inlined
 
 
-    def process_integrations(self, content):
+    def process_integrations(self, content, marketplace=False):
         """
         Goes through all files needed for integrations build
         and triggers the right function for the right type of file.
@@ -226,7 +226,7 @@ class Integrations:
                 self.process_service_checks(file_name)
 
             elif file_name.endswith(".md"):
-                self.process_integration_readme(file_name)
+                self.process_integration_readme(file_name, marketplace)
 
     def merge_integrations(self):
         """ Merges integrations that come under one """
@@ -405,7 +405,7 @@ class Integrations:
             self.data_service_checks_dir + new_file_name,
         )
 
-    def process_integration_readme(self, file_name):
+    def process_integration_readme(self, file_name, marketplace=False):
         """
         Take a single README.md file and
         1. extract the first h1, if this isn't a merge item
@@ -471,10 +471,13 @@ class Integrations:
         regex_skip_sections_start = r"(```|\{\{< code-block)"
 
         ## Formating all link as reference to avoid any corner cases
-        try:
-            result = format_link_file(file_name,regex_skip_sections_start,regex_skip_sections_end)
-        except Exception as e:
-            print(e)
+        if not marketplace:
+            try:
+                result = format_link_file(file_name,regex_skip_sections_start,regex_skip_sections_end)
+            except Exception as e:
+                print(e)
+        else:
+            result = file_name
 
         ## Check if there is a integration tab logic in the integration file:
         if "<!-- xxx tabs xxx -->" in result:

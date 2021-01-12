@@ -63,7 +63,8 @@ class Build:
             try:
                 if content["action"] == "integrations":
                     Int.process_integrations(content)
-
+                elif content["action"] == "marketplace-integrations":
+                    Int.process_integrations(content, marketplace=True)
                 elif (content["action"] == "pull-and-push-folder"):
                     pull_and_push_folder(content, self.content_dir)
 

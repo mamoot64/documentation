@@ -76,7 +76,7 @@
   - repo_name: marketplace
     contents:
 
-    - action: integrations
+    - action: marketplace-integrations
       branch: master
       globs:
       - "*/metadata.csv"

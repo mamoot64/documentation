@@ -76,8 +76,8 @@
   - repo_name: marketplace
     contents:
 
-    - action: integrations
-      branch: master
+    - action: marketplace-integrations
+      branch: documentation/site
       globs:
       - "*/metadata.csv"
       - "*/manifest.json"
