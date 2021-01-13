@@ -11,6 +11,7 @@ import markdown2
 
 from json import JSONDecodeError
 from itertools import chain
+from shutil import copyfile
 from os import sep, makedirs, getenv, remove
 from os.path import (
     exists,
@@ -203,7 +204,6 @@ class Integrations:
 
         return integration_content_with_link_inlined
 
-
     def process_integrations(self, content, marketplace=False):
         """
         Goes through all files needed for integrations build
@@ -227,6 +227,9 @@ class Integrations:
 
             elif file_name.endswith(".md"):
                 self.process_integration_readme(file_name, marketplace)
+
+            elif file_name.endswith(".png") and marketplace:
+                self.process_images(file_name)
 
     def merge_integrations(self):
         """ Merges integrations that come under one """
@@ -405,6 +408,31 @@ class Integrations:
             self.data_service_checks_dir + new_file_name,
         )
 
+    # file_name e.g. ./integrations_data/extracted/marketplace/rapdev-snmp-profiles/images/2.png
+    def process_images(self, file_name):
+        """
+        Copies a single image file (PNG) to the static/images/marketplace/{integration} folder,
+        creating this as a new directory if needed.
+        """
+        image_filename = basename(file_name) # img.png
+        integration_path = file_name.replace('./integrations_data/extracted/marketplace/', '') # nerdvision/images/img.png
+        integration_name = dirname(integration_path).split('/')[0] # nerdvision/
+        destination_directory = './static/images/marketplace/{}/'.format(integration_name) # static/images/marketplace/nerdvision/
+        full_destination_path = '{}/{}'.format(destination_directory, image_filename) # static/images/marketplace/nerdvision/img.png
+
+        makedirs(dirname(destination_directory), exist_ok=True)
+        copyfile(file_name, full_destination_path)
+
+        ## replace image sources in the markdown now?
+        ## this might be brittle and could break if maintainers of Marketplace repo change where/how they store images.
+        # marketplace_base_image_url = 'https://raw.githubusercontent.com/DataDog/marketplace/master'
+
+        # with open('file_name', 'w') as f:
+        #     text = f.readlines()
+        #     img_src_to_replace = '{}/{}'.format(marketplace_base_image_url, integration_path)
+        #     text.replace(img_src_to_replace, full_destination_path)
+
+
     def process_integration_readme(self, file_name, marketplace=False):
         """
         Take a single README.md file and
@@ -471,6 +499,7 @@ class Integrations:
         regex_skip_sections_start = r"(```|\{\{< code-block)"
 
         ## Formating all link as reference to avoid any corner cases
+        ## Replace image filenames in the markdown for marketplace interations
         if not marketplace:
             try:
                 result = format_link_file(file_name,regex_skip_sections_start,regex_skip_sections_end)
@@ -478,6 +507,8 @@ class Integrations:
                 print(e)
         else:
             result = file_name
+            # result = open(file_name, 'r', encoding='utf-8').read()
+
 
         ## Check if there is a integration tab logic in the integration file:
         if "<!-- xxx tabs xxx -->" in result:

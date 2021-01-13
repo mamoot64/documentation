@@ -80,7 +80,8 @@ class Build:
                     print(
                         "\x1b[31mERROR\x1b[0m: Action {} unknown for {}".format(content["action"], content))
                     raise ValueError
-            except:
+            except Exception as e:
+                print(e)
                 if getenv("LOCAL") == 'True':
                     print(
                         "\x1b[33mWARNING\x1b[0m: Unsuccessful processing of {}".format(content))
