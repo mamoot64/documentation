@@ -83,6 +83,7 @@
       - "*/manifest.json"
       - "*/assets/service_checks.json"
       - "*/README.md"
+      - "*/images/*.png"
 
   - repo_name: ansible-datadog
     contents:
