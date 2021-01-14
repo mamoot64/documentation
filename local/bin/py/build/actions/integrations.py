@@ -411,18 +411,36 @@ class Integrations:
     # file_name e.g. ./integrations_data/extracted/marketplace/rapdev-snmp-profiles/images/2.png
     def process_images(self, file_name):
         """
-        Copies a single image file (PNG) to the static/images/marketplace/{integration} folder,
-        creating this as a new directory if needed.
+        Copies a single image file (PNG) to the static/images/ folder, creating a new directory if needed.
         """
         image_filename = basename(file_name) # img.png
-        integration_path = file_name.replace('./integrations_data/extracted/marketplace/', '') # nerdvision/images/img.png
-        integration_name = dirname(integration_path).split('/')[0] # nerdvision/
-        destination_directory = './static/images/marketplace/{}/'.format(integration_name) # static/images/marketplace/nerdvision/
-        full_destination_path = '{}/{}'.format(destination_directory, image_filename) # static/images/marketplace/nerdvision/img.png
+        integration_image_path = file_name.replace('./integrations_data/extracted/', '') # marketplace/nerdvision/images/img.png
+        integration_image_directory = dirname(integration_image_path) # marketplace/nerdvision/images/
+        destination_directory = './static/images/{}'.format(integration_image_directory) # static/images/marketplace/nerdvision/images/
+        full_destination_path = '{}/{}'.format(destination_directory, image_filename) # static/images/marketplace/nerdvision/images/img.png
 
-        makedirs(dirname(destination_directory), exist_ok=True)
+        makedirs(destination_directory, exist_ok=True)
         copyfile(file_name, full_destination_path)
 
+    def replace_image_src(self, file_name):
+        """
+        Takes a markdown file and replaces any image src with our img shortcode, pointing to the static/images folder.
+        Returns the markdown file with updated img sources (or the unedited original version if no regex matches were found).
+        This is needed in Marketplace Integrations to show images that have been pulled from a private repo.
+        """
+        markdown_img_search_regex = r"!\[(.*?)\]\((.*?)\)"
+        integration_image_prefix = 'https://raw.githubusercontent.com/DataDog/marketplace/master/'
+
+        with open(file_name, 'r+') as f:
+            content = f.read()
+            content = content.replace(integration_image_prefix,'marketplace/')
+            img_shortcode = "{{< img src=\"\\2\" alt=\"\\1\" >}}"
+            regex_result = re.sub(markdown_img_search_regex, img_shortcode, content, 0, re.MULTILINE)
+
+            if regex_result:
+                return regex_result
+            else:
+                return file_name
 
     def process_integration_readme(self, file_name, marketplace=False):
         """
@@ -490,28 +508,17 @@ class Integrations:
         regex_skip_sections_start = r"(```|\{\{< code-block)"
 
         ## Formating all link as reference to avoid any corner cases
-        ## Replace image filenames in the markdown for marketplace interations
+        ## Replace image filenames in markdown for marketplace interations
         if not marketplace:
             try:
                 result = format_link_file(file_name,regex_skip_sections_start,regex_skip_sections_end)
             except Exception as e:
                 print(e)
         else:
-            # result = file_name
-            # result = open(file_name, 'r', encoding='utf-8').read()
-
-            markdown_img_search_regex = r"!\[(.*?)\]\((.*?)\)"
-
-            with open(file_name, 'r+') as f:
-                content = f.read()
-                content = content.replace('https://raw.githubusercontent.com/DataDog/marketplace/master/','marketplace/').replace('images/', '')
-                subst = "{{< img src=\"\\2\" alt=\"\\1\" >}}"
-                regex_result = re.sub(markdown_img_search_regex, subst, content, 0, re.MULTILINE)
-
-                if regex_result:
-                    result = regex_result
-
-        result = file_name
+            # result = self.replace_image_src(file_name)
+        
+            # Comment this in before publishing preview (until Pricing and Setup pieces are removed successfully)
+            result = file_name
 
         ## Check if there is a integration tab logic in the integration file:
         if "<!-- xxx tabs xxx -->" in result:
