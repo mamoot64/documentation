@@ -423,15 +423,6 @@ class Integrations:
         makedirs(dirname(destination_directory), exist_ok=True)
         copyfile(file_name, full_destination_path)
 
-        ## replace image sources in the markdown now?
-        ## this might be brittle and could break if maintainers of Marketplace repo change where/how they store images.
-        # marketplace_base_image_url = 'https://raw.githubusercontent.com/DataDog/marketplace/master'
-
-        # with open('file_name', 'w') as f:
-        #     text = f.readlines()
-        #     img_src_to_replace = '{}/{}'.format(marketplace_base_image_url, integration_path)
-        #     text.replace(img_src_to_replace, full_destination_path)
-
 
     def process_integration_readme(self, file_name, marketplace=False):
         """
@@ -506,9 +497,21 @@ class Integrations:
             except Exception as e:
                 print(e)
         else:
-            result = file_name
+            # result = file_name
             # result = open(file_name, 'r', encoding='utf-8').read()
 
+            markdown_img_search_regex = r"!\[(.*?)\]\((.*?)\)"
+
+            with open(file_name, 'r+') as f:
+                content = f.read()
+                content = content.replace('https://raw.githubusercontent.com/DataDog/marketplace/master/','marketplace/').replace('images/', '')
+                subst = "{{< img src=\"\\2\" alt=\"\\1\" >}}"
+                regex_result = re.sub(markdown_img_search_regex, subst, content, 0, re.MULTILINE)
+
+                if regex_result:
+                    result = regex_result
+
+        result = file_name
 
         ## Check if there is a integration tab logic in the integration file:
         if "<!-- xxx tabs xxx -->" in result:
