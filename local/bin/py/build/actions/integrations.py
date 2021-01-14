@@ -433,7 +433,7 @@ class Integrations:
 
         with open(file_name, 'r+') as f:
             content = f.read()
-            content = content.replace(integration_image_prefix,'marketplace/')
+            content = content.replace(integration_image_prefix, 'marketplace/')
             img_shortcode = "{{< img src=\"\\2\" alt=\"\\1\" >}}"
             regex_result = re.sub(markdown_img_search_regex, img_shortcode, content, 0, re.MULTILINE)
 
@@ -441,6 +441,25 @@ class Integrations:
                 return regex_result
             else:
                 return file_name
+
+    # def hide_setup_steps(self, file_name):
+    #     """
+    #     Hides all Setup content from Marketplace Integration markdown files.
+    #     """
+
+    #     setup_header_string = '## Setup'
+
+    #     with open(file_name, 'r+') as f:
+    #         content = f.read()
+    #         setup_header_index = content.find(setup_header_string)
+    #         next_header_index = content.find('##', setup_header_index+2)
+    #         string_to_replace = content[setup_header_index:next_header_index]
+    #         replaced_result = content.replace(string_to_replace, '')
+
+    #         if replaced_result:
+    #             return replaced_result
+    #         else:
+    #             return file_name
 
     def process_integration_readme(self, file_name, marketplace=False):
         """
@@ -516,6 +535,7 @@ class Integrations:
                 print(e)
         else:
             # result = self.replace_image_src(file_name)
+            # result = self.hide_setup_steps(result)
         
             # Comment this in before publishing preview (until Pricing and Setup pieces are removed successfully)
             result = file_name
