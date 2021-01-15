@@ -424,7 +424,7 @@ class Integrations:
 
     def replace_image_src(self, file_name):
         """
-        Takes a markdown file and replaces any image src with our img shortcode, pointing to the static/images folder.
+        Takes a markdown file and replaces any image markdown with our img shortcode, pointing to the static/images folder.
         Returns the markdown file with updated img sources (or the unedited original version if no regex matches were found).
         This is needed in Marketplace Integrations to show images that have been pulled from a private repo.
         """
@@ -444,26 +444,25 @@ class Integrations:
 
     def remove_section(self, markdown, h2_header_string):
         """
-        Removes a section from markdown by searching for the provided h2 header string
-        h2_header_string is expected to be in markdown format; e.g. "## Steps"
+        Removes a section from markdown by deleting all content from the given h2_header_string to the next found h2 markdown
+        h2_header_string is expected to be in markdown format; e.g. '## Steps'
         """
-        print(markdown)
 
         if not h2_header_string.startswith('##'):
             return
     
-        h2_markdown_regex = r"(#{2}) (\w+)"
+        h2_markdown_regex = r"(^|\n)(#{2}) (\w+)"
         h2_list = re.finditer(h2_markdown_regex, markdown)
+        replaced_result = ''
 
         for match in h2_list:
-            print(match.group(0))
             group = match.group(0)
             start = match.start()
-            end = match.end()-1
+            end = match.end() - 1
 
-            if group == h2_header_string:
+            if h2_header_string in group:
+                start_index = start
                 end_index = next(h2_list).start()
-                start_index = start  # index of ## Setup
                 content_to_remove = markdown[start_index:end_index]
                 replaced_result = markdown.replace(content_to_remove, '')
 
@@ -545,11 +544,11 @@ class Integrations:
             except Exception as e:
                 print(e)
         else:
-            markdown_with_replaced_images = self.replace_image_src(file_name)
-            result = self.remove_section(markdown_with_replaced_images, '## Setup')
+            # markdown_with_replaced_images = self.replace_image_src(file_name)
+            # result = self.remove_section(markdown_with_replaced_images, '## Setup')
         
             # Comment this in before publishing preview (until Pricing and Setup pieces are removed successfully)
-            # result = file_name
+            result = file_name
 
         ## Check if there is a integration tab logic in the integration file:
         if "<!-- xxx tabs xxx -->" in result:
