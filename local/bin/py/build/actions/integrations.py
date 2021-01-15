@@ -429,11 +429,11 @@ class Integrations:
         This is needed in Marketplace Integrations to show images that have been pulled from a private repo.
         """
         markdown_img_search_regex = r"!\[(.*?)\]\((.*?)\)"
-        integration_image_prefix = 'https://raw.githubusercontent.com/DataDog/marketplace/master/'
+        integration_img_prefix = 'https://raw.githubusercontent.com/DataDog/marketplace/master/'
 
         with open(file_name, 'r+') as f:
             content = f.read()
-            content = content.replace(integration_image_prefix, 'marketplace/')
+            content = content.replace(integration_img_prefix, 'marketplace/')
             img_shortcode = "{{< img src=\"\\2\" alt=\"\\1\" >}}"
             regex_result = re.sub(markdown_img_search_regex, img_shortcode, content, 0, re.MULTILINE)
 
@@ -442,24 +442,35 @@ class Integrations:
             else:
                 return file_name
 
-    # def hide_setup_steps(self, file_name):
-    #     """
-    #     Hides all Setup content from Marketplace Integration markdown files.
-    #     """
+    def remove_section(self, markdown, h2_header_string):
+        """
+        Removes a section from markdown by searching for the provided h2 header string
+        h2_header_string is expected to be in markdown format; e.g. "## Steps"
+        """
+        print(markdown)
 
-    #     setup_header_string = '## Setup'
+        if not h2_header_string.startswith('##'):
+            return
+    
+        h2_markdown_regex = r"(#{2}) (\w+)"
+        h2_list = re.finditer(h2_markdown_regex, markdown)
 
-    #     with open(file_name, 'r+') as f:
-    #         content = f.read()
-    #         setup_header_index = content.find(setup_header_string)
-    #         next_header_index = content.find('##', setup_header_index+2)
-    #         string_to_replace = content[setup_header_index:next_header_index]
-    #         replaced_result = content.replace(string_to_replace, '')
+        for match in h2_list:
+            print(match.group(0))
+            group = match.group(0)
+            start = match.start()
+            end = match.end()-1
 
-    #         if replaced_result:
-    #             return replaced_result
-    #         else:
-    #             return file_name
+            if group == h2_header_string:
+                end_index = next(h2_list).start()
+                start_index = start  # index of ## Setup
+                content_to_remove = markdown[start_index:end_index]
+                replaced_result = markdown.replace(content_to_remove, '')
+
+        if replaced_result:
+            return replaced_result
+        else:
+            return markdown
 
     def process_integration_readme(self, file_name, marketplace=False):
         """
@@ -534,11 +545,11 @@ class Integrations:
             except Exception as e:
                 print(e)
         else:
-            # result = self.replace_image_src(file_name)
-            # result = self.hide_setup_steps(result)
+            markdown_with_replaced_images = self.replace_image_src(file_name)
+            result = self.remove_section(markdown_with_replaced_images, '## Setup')
         
             # Comment this in before publishing preview (until Pricing and Setup pieces are removed successfully)
-            result = file_name
+            # result = file_name
 
         ## Check if there is a integration tab logic in the integration file:
         if "<!-- xxx tabs xxx -->" in result:
