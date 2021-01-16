@@ -2700,6 +2700,10 @@ api_v1:
     parent: Logs Indexes
     url: '#get-an-index'
     generated: true
+  - name: Create an index
+    parent: Logs Indexes
+    url: '#create-an-index'
+    generated: true
   - name: Update an index
     parent: Logs Indexes
     url: '#update-an-index'
