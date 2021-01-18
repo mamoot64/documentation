@@ -104,6 +104,8 @@ Le traceur PHP peut être configuré à l'aide de variables d'environnement.
 
 **Remarque** : si vous utilisez l'instrumentation automatique du code (la méthode conseillée), rappelez-vous que le code instrumenté s'exécute avant le code utilisateur. Par conséquent, les variables d'environnement ci-dessous doivent être définies au niveau du serveur et mises à disposition de l'environnement d'exécution PHP avant l'exécution de tout code utilisateur. Par exemple, `putenv()` et les fichiers `.env` ne fonctionneraient pas.
 
+**Important** :Vous devez activer la directive `clear_env = no` dans votre fichier de configuration php-fpm. En spécifiant la valeur à `no` ,toutes les variables d'environnement seront accessibles depuis l'execution du code PHP via `getenv(), $_ENV and $_SERVER`.
+
 ### Apache
 
 Pour Apache avec php-fpm, utilisez le répertoire `env` de votre fichier de configuration `www.conf` pour configurer le traceur PHP. Exemple :
@@ -111,10 +113,10 @@ Pour Apache avec php-fpm, utilisez le répertoire `env` de votre fichier de conf
 ```
 ; Example of passing the host environment variable SOME_ENV
 ; to the PHP process as DD_AGENT_HOST
-env[DD_AGENT_HOST] = $SOME_ENV
+env["DD_AGENT_HOST"] = $SOME_ENV
 ; Example of passing the value 'my-app' to the PHP
 ; process as DD_SERVICE
-env[DD_SERVICE] = my-app
+env["DD_SERVICE"] = my-app
 ```
 
 Vous pouvez également utiliser [`SetEnv`][14] depuis la configuration du serveur, le host virtuel, le répertoire ou le fichier `.htaccess`.
@@ -130,10 +132,10 @@ Pour NGINX, utilisez la directive `env` dans le fichier `www.conf` de php-fpm. E
 ```
 ; Example of passing the host environment variable SOME_ENV
 ; to the PHP process as DD_AGENT_HOST
-env[DD_AGENT_HOST] = $SOME_ENV
+env["DD_AGENT_HOST"] = $SOME_ENV
 ; Example of passing the value 'my-app' to the PHP
 ; process as DD_SERVICE
-env[DD_SERVICE] = my-app
+env["DD_SERVICE"] = my-app
 ```
 
 **Remarque** : si vous avez activé l'APM pour votre serveur NGINX, assurez-vous d'avoir correctement configuré le paramètre `opentracing_fastcgi_propagate_context` pour que le tracing distribué fonctionne correctement. Consultez la [configuration de l'APM NGINX][15] pour obtenir plus d'informations.
